@@ -12,11 +12,14 @@ function MovieWatchList() {
     Watched: false,
   });
 
+  // Base API URL from environment variable
+  const API_URL = import.meta.env.VITE_API_URL;
+
   // Fetch movies
   const fetchMovies = async () => {
     try {
       setMovies([]); // Clear to force UI refresh
-      const response = await axios.get('http://localhost:5000/api/movies');
+      const response = await axios.get(API_URL);
       console.log('Fetched movies:', response.data); // Debug
       setMovies(response.data);
     } catch (err) {
@@ -66,9 +69,9 @@ function MovieWatchList() {
       console.log('Sending payload:', payload); // Debug
       let response;
       if (selectedMovie) {
-        response = await axios.put(`http://localhost:5000/api/movies/${selectedMovie._id}`, payload);
+        response = await axios.put(`${API_URL}/${selectedMovie._id}`, payload);
       } else {
-        response = await axios.post('http://localhost:5000/api/movies', payload);
+        response = await axios.post(API_URL, payload);
       }
       console.log('Server response:', response.data); // Debug
       fetchMovies();
@@ -82,7 +85,7 @@ function MovieWatchList() {
   // Handle delete
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/movies/${id}`);
+      await axios.delete(`${API_URL}/${id}`);
       fetchMovies();
     } catch (err) {
       console.error('Error deleting movie:', err);
